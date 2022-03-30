@@ -21,9 +21,6 @@ class SizeSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    size = SizeSerializer()
-
     class Meta:
         model = Product
         fields = '__all__'

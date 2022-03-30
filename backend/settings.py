@@ -17,6 +17,16 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+# Environment variable configuration
+env_base = environ.Path(__file__) - 2
+environ.Env.read_env(env_file=env_base('.env'))
+env = environ.Env(
+    DEBUG=(bool, True),
+    MEDIA_ROOT=(str, os.path.normpath(os.path.join(BASE_DIR, "media")))
+)
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -83,11 +93,26 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
+        'TEST': {'CHARSET': 'utf8mb4', },
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST', default='localhost'),
+        'PORT': env('DB_PORT', default='3306'),
+    },
 }
 
 
